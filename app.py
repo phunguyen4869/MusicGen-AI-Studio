@@ -14,7 +14,45 @@ st.markdown("Generate music, write lyrics, and cover songs with AI (Minimax API)
 
 # Setup API Key
 api_key = os.environ.get("MINIMAX_API_KEY", "")
-user_api_key = st.sidebar.text_input("Minimax API Key", value=api_key, type="password")
+
+# Simple Authentication System
+if 'authenticated' not in st.session_state:
+    st.session_state.authenticated = False
+
+# Sidebar for Authentication & Settings
+with st.sidebar:
+    st.header("🔐 Authentication")
+    
+    if not st.session_state.authenticated:
+        st.info("Please login to use the application.")
+        username = st.text_input("Username")
+        password = st.text_input("Password", type="password")
+        
+        # Hardcoded credentials for demonstration (can be moved to .env later)
+        VALID_USER = os.environ.get("APP_USERNAME", "admin")
+        VALID_PASS = os.environ.get("APP_PASSWORD", "admin123")
+        
+        if st.button("Login", use_container_width=True):
+            if username == VALID_USER and password == VALID_PASS:
+                st.session_state.authenticated = True
+                st.success("Logged in successfully!")
+                st.rerun()
+            else:
+                st.error("Invalid username or password")
+    else:
+        st.success("✅ Logged in")
+        if st.button("Logout", use_container_width=True):
+            st.session_state.authenticated = False
+            st.rerun()
+            
+        st.divider()
+        st.header("⚙️ Settings")
+        user_api_key = st.text_input("Minimax API Key", value=api_key, type="password")
+
+# Block access if not authenticated
+if not st.session_state.authenticated:
+    st.warning("⚠️ Please login from the sidebar to access the AI Studio.")
+    st.stop()
 
 if not user_api_key:
     st.warning("⚠️ Please enter your Minimax API Key in the sidebar to continue.")
