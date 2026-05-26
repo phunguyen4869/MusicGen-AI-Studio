@@ -124,7 +124,32 @@ with tab2:
                     res.raise_for_status()
                     data = res.json()
                     st.success("Music generated successfully!")
-                    st.json(data)
+                    
+                    # Try to extract audio URL from Minimax response format and play it
+                    try:
+                        # Assuming the API returns a URL in the response
+                        # Minimax response structure might have data -> audio -> url or similar
+                        # Example: data = {"audio": "https://url.mp3", ...}
+                        
+                        audio_url = None
+                        
+                        # Handle different possible response structures from Minimax API
+                        if "data" in data and isinstance(data["data"], dict) and "audio" in data["data"]:
+                            audio_url = data["data"]["audio"]
+                        elif "audio_url" in data:
+                            audio_url = data["audio_url"]
+                        elif "url" in data:
+                            audio_url = data["url"]
+                            
+                        if audio_url:
+                            st.audio(audio_url, format="audio/mp3")
+                        else:
+                            st.info("Audio URL not found in response. You can view the raw JSON below.")
+                    except Exception as e:
+                        st.info("Could not extract audio player from response. Showing raw JSON.")
+                        
+                    with st.expander("Show raw JSON response"):
+                        st.json(data)
                 except Exception as e:
                     st.error(f"Error: {e}")
                     if hasattr(e, 'response') and e.response is not None:
@@ -201,7 +226,26 @@ with tab3:
                     res.raise_for_status()
                     data = res.json()
                     st.success("Cover generated successfully!")
-                    st.json(data)
+                    
+                    # Try to extract audio URL and play it
+                    try:
+                        audio_url = None
+                        if "data" in data and isinstance(data["data"], dict) and "audio" in data["data"]:
+                            audio_url = data["data"]["audio"]
+                        elif "audio_url" in data:
+                            audio_url = data["audio_url"]
+                        elif "url" in data:
+                            audio_url = data["url"]
+                            
+                        if audio_url:
+                            st.audio(audio_url, format="audio/mp3")
+                        else:
+                            st.info("Audio URL not found in response.")
+                    except Exception as e:
+                        pass
+                        
+                    with st.expander("Show raw JSON response"):
+                        st.json(data)
                 except Exception as e:
                     st.error(f"Error: {e}")
                     if hasattr(e, 'response') and e.response is not None:
