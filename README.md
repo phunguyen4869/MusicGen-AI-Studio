@@ -1,46 +1,89 @@
-# MiniMax Music Generation Example
+# MiniMax AI Studio (Music + Image + Speech)
 
-This repository contains a simple Python script to generate music using the [MiniMax Music 2.6 API](https://platform.minimax.io/docs/guides/music-generation).
+A Streamlit app that integrates multiple MiniMax APIs in one place:
+
+- Lyric generation
+- Music generation
+- Cover generation (preprocess + regenerate)
+- Text to Image generation
+- Text to Speech generation
+
+## Features
+
+- Sidebar authentication (`APP_USERNAME` / `APP_PASSWORD`)
+- API key input in UI (`MINIMAX_API_KEY`)
+- Modular architecture for feature tabs:
+  - `image_generation.py`
+  - `tts_generation.py`
+- Raw JSON response viewer for easier debugging
 
 ## Prerequisites
 
-- Python 3.x
-- MiniMax API Key (get one from the [MiniMax Platform](https://platform.minimax.io/))
+- Python 3.9+
+- MiniMax API key from [MiniMax Platform](https://platform.minimax.io/)
 
 ## Setup
 
-1. Clone or download this repository.
-2. Navigate to the project directory.
-3. Set up a virtual environment (recommended):
+1. Clone repository and open project folder.
+2. Create virtual environment:
 
 ```bash
 python3 -m venv venv
-source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+source venv/bin/activate  # Windows: venv\Scripts\activate
 ```
 
-4. Install the required dependencies:
+3. Install dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-5. Copy the example environment file and add your API key:
+4. Configure environment variables:
 
 ```bash
 cp .env.example .env
 ```
-Edit the `.env` file and replace `your_api_key_here` with your actual MiniMax API key.
 
-## Usage
+Then update `.env` with your values.
 
-Run the script to generate a song based on the predefined prompt and lyrics:
+## Environment variables
+
+Minimum required:
+
+- `MINIMAX_API_KEY`
+- `APP_USERNAME`
+- `APP_PASSWORD`
+
+Optional endpoint overrides:
+
+- `MINIMAX_API_URL_LYRICS` (default: `https://api.minimax.io/v1/lyrics_generation`)
+- `MINIMAX_API_URL_MUSIC` (default: `https://api.minimax.io/v1/music_generation`)
+- `MINIMAX_API_URL_IMAGE` (default: `https://api.minimax.io/v1/image_generation`)
+- `MINIMAX_API_URL_TTS` (default: `https://api.minimax.io/v1/t2a_v2`)
+
+## Run app
 
 ```bash
-python music_generation.py
+streamlit run app.py
 ```
 
-The script will output a JSON response containing the generated audio URL and other metadata if successful.
+Open the local Streamlit URL shown in terminal, login from sidebar, and input your MiniMax API key.
 
-## Customization
+## API references
 
-You can edit `music_generation.py` to change the `prompt` or `lyrics` to generate different styles of music or different songs. You can also use the `is_instrumental: true` flag in the payload for instrumental tracks, or enable `lyrics_optimizer: true` to have the AI write the lyrics for you based on the prompt.
+- Text to Image: [MiniMax Text to Image API](https://platform.minimax.io/docs/api-reference/image-generation-t2i)
+- Text to Speech (HTTP): [MiniMax T2A HTTP API](https://platform.minimax.io/docs/api-reference/speech-t2a-http)
+
+## Project structure
+
+- `app.py`: Main Streamlit app and tab routing
+- `image_generation.py`: Text-to-image UI + request handling
+- `tts_generation.py`: Text-to-speech UI + request handling
+- `music_generation.py`: Simple standalone music generation script
+- `Cover/preprocess.py`: Cover preprocessing helper script
+
+## Notes
+
+- Some API output URLs may expire after a limited time.
+- If a request fails, check the `base_resp.status_code/status_msg` in the expanded raw JSON response.
+- Keep `.env` private and never commit secrets.

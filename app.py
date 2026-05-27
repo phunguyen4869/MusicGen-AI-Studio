@@ -9,8 +9,8 @@ from image_generation import render_text_to_image_tab
 load_dotenv()
 
 # App layout & styling
-st.set_page_config(page_title="MusicGen AI Studio", page_icon="🎵", layout="wide")
-st.title("🎵 MusicGen AI Studio")
+st.set_page_config(page_title="MiniMax AI Studio", page_icon="🎵", layout="wide")
+st.title("🎵 MiniMax AI Studio")
 st.markdown("Generate music, write lyrics, cover songs, and create images with AI (Minimax API).")
 
 # Setup API Key
