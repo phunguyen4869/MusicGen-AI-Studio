@@ -63,11 +63,21 @@ Optional endpoint overrides:
 
 ## Run app
 
+### Local
+
 ```bash
 streamlit run app.py
 ```
 
-Open the local Streamlit URL shown in terminal, login from sidebar, and input your MiniMax API key.
+### Docker Compose
+
+```bash
+docker compose up --build -d
+```
+
+Then open [http://localhost:8501](http://localhost:8501).
+
+Open the app, login from sidebar, and input your MiniMax API key.
 
 ## API references
 
